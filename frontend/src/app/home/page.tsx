@@ -1,4 +1,19 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+
 export default function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Read login state from localStorage on component mount
+  useEffect(() => {
+    const storedLoginState = localStorage.getItem('isLoggedIn');
+    if (storedLoginState) {
+      setIsLoggedIn(storedLoginState === 'true');
+    }
+  }, []);
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Stats Section */}
@@ -13,35 +28,47 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Join Community Section */}
-      <div className="bg-gray-100 rounded-lg p-6 mb-8">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-gray-700">👥</span>
-          <h2 className="text-xl font-bold">Join WalkShare Community</h2>
-        </div>
-        <p className="text-gray-600 mb-4">Login to unlock full features and start sharing walks</p>
-        
-        <div className="grid md:grid-cols-3 gap-6">
-          <div>
-            <h3 className="font-semibold mb-2">Create Walks</h3>
-            <p className="text-gray-600">Organize your own walks and set your preferred schedule</p>
+      {/* Join Community Section - Only shown when logged out */}
+      {!isLoggedIn && (
+        <div className="bg-gray-100 rounded-lg p-6 mb-8">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-gray-700">👥</span>
+            <h2 className="text-xl font-bold">Join WalkShare Community</h2>
           </div>
-          <div>
-            <h3 className="font-semibold mb-2">Join Existing Walks</h3>
-            <p className="text-gray-600">Find and join walks that match your travel plans</p>
+          <p className="text-gray-600 mb-4">Login to unlock full features and start sharing walks</p>
+          
+          <div className="grid md:grid-cols-3 gap-6">
+            <div>
+              <h3 className="font-semibold mb-2">Create Walks</h3>
+              <p className="text-gray-600">Organize your own walks and set your preferred schedule</p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Join Existing Walks</h3>
+              <p className="text-gray-600">Find and join walks that match your travel plans</p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Manage Your Trips</h3>
+              <p className="text-gray-600">Track your walks and communicate with co-walkers</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-semibold mb-2">Manage Your Trips</h3>
-            <p className="text-gray-600">Track your walks and communicate with co-walkers</p>
-          </div>
-        </div>
 
-        <div className="mt-6 flex justify-center">
-          <button className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded">
-            Login or Register Now
-          </button>
+          <div className="mt-6 flex justify-center">
+            <button className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded">
+              Login or Register Now
+            </button>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Create Walk Button - Only shown when logged in */}
+      {isLoggedIn && (
+        <div className="w-full flex justify-center mb-8">
+          <Link href="/create-walk" className="bg-blue-900 hover:bg-blue-800 text-white font-semibold py-3 px-6 rounded-md flex items-center gap-2">
+            <span>+</span>
+            <span>Create New Walk</span>
+          </Link>
+        </div>
+      )}
 
       {/* Walks Section */}
       <div>
