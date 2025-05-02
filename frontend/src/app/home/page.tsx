@@ -38,7 +38,7 @@ export default function Home() {
   const [walks, setWalks] = useState<Walk[]>([
     {
       id: 1,
-      title: "From Marina Hotel to NS Co-Working",
+      title: "From Marina Hotel to NS Coworking",
       user: "Genesis Dayrit",
       dateTime: new Date(2025, 4, 4, 12, 10), // May 4, 2025, 12:10 pm
       meetupSpot: "NS Cafe",
@@ -48,10 +48,10 @@ export default function Home() {
     },
     {
       id: 2,
-      title: "From NS Co-Working to Marina Hotel",
+      title: "From NS Coworking to Marina Hotel",
       user: "Genesis Dayrit",
       dateTime: new Date(2025, 4, 4, 16, 30), // May 4, 2025, 4:30 pm
-      meetupSpot: "Near Entrance NS-Co-Working",
+      meetupSpot: "Near Entrance NS-Coworking",
       participants: "1/5 participants",
       direction: "coworking-to-marina",
       discussionTopic: "Tech trends in 2025"
@@ -59,7 +59,7 @@ export default function Home() {
     // Add a past walk for testing the time filter
     {
       id: 3,
-      title: "From Marina Hotel to NS Co-Working",
+      title: "From Marina Hotel to NS Coworking",
       user: "Genesis Dayrit",
       dateTime: new Date(2025, 4, 2, 10, 0), // May 2, 2025, 10:00 am (past relative to May 3)
       meetupSpot: "NS Cafe",

@@ -81,7 +81,7 @@ export default function CreateWalkPage() {
                     className="sr-only" 
                   />
                   <span className="text-center font-medium">
-                    From Marina Hotel to NS Co-Working
+                    From Marina Hotel to NS Coworking
                   </span>
                 </Label>
                 
@@ -95,7 +95,7 @@ export default function CreateWalkPage() {
                     className="sr-only" 
                   />
                   <span className="text-center font-medium">
-                    From NS Co-Working to Marina Hotel
+                    From NS Coworking to Marina Hotel
                   </span>
                 </Label>
               </RadioGroup>
@@ -153,7 +153,7 @@ export default function CreateWalkPage() {
                     </>
                   ) : (
                     <>
-                      <SelectItem value="ns-coworking-entrance">Near Entrance NS-Co-Working</SelectItem>
+                      <SelectItem value="ns-coworking-entrance">Near Entrance NS-Coworking</SelectItem>
                       <SelectItem value="custom">Setup Custom Meetup Spot</SelectItem>
                     </>
                   )}
