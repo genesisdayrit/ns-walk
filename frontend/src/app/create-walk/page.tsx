@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 
 import { 
@@ -15,11 +15,34 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
 export default function CreateWalkPage() {
-  const [direction, setDirection] = useState('singapore-to-forest-city');
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [direction, setDirection] = useState('marina-to-coworking');
+  const [meetupSpot, setMeetupSpot] = useState(direction === 'marina-to-coworking' ? 'ns-cafe' : 'ns-coworking-entrance');
+  const [showCustomMeetupInput, setShowCustomMeetupInput] = useState(false);
+  const [timeFlexibility, setTimeFlexibility] = useState('on-time');
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
+
+  // Update the meetup spot when direction changes
+  useEffect(() => {
+    if (direction === 'marina-to-coworking') {
+      setMeetupSpot('ns-cafe');
+    } else {
+      setMeetupSpot('ns-coworking-entrance');
+    }
+    setShowCustomMeetupInput(false);
+  }, [direction]);
+
+  // Handle meetup spot change
+  const handleMeetupSpotChange = (value: string) => {
+    setMeetupSpot(value);
+    setShowCustomMeetupInput(value === 'custom');
+    if (value !== 'custom') {
+      setValue('customMeetupSpot', '');
+    }
+  };
 
   const onSubmit = (data: any) => {
     console.log('Form data submitted:', data);
@@ -33,7 +56,7 @@ export default function CreateWalkPage() {
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Create a New Walk</CardTitle>
           <CardDescription>
-            Enter your pickup location in Singapore and the number of participants
+            Set up a walk and choose your meetup location
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -42,59 +65,45 @@ export default function CreateWalkPage() {
             <div className="space-y-2">
               <Label htmlFor="direction">Direction</Label>
               <RadioGroup 
-                defaultValue="singapore-to-forest-city" 
+                defaultValue="marina-to-coworking" 
                 value={direction} 
                 onValueChange={setDirection}
-                className="grid grid-cols-2 gap-4"
+                className="grid grid-cols-1 gap-4"
+                id="direction"
               >
-                <div className={`flex items-center justify-center rounded-md border p-4 cursor-pointer ${direction === 'singapore-to-forest-city' ? 'bg-primary text-primary-foreground' : 'bg-background'}`}>
+                <Label
+                  className={`flex items-center justify-center rounded-md border p-4 cursor-pointer ${direction === 'marina-to-coworking' ? 'bg-primary text-primary-foreground' : 'bg-background'}`}
+                  htmlFor="marina-to-coworking"
+                >
                   <RadioGroupItem 
-                    value="singapore-to-forest-city" 
-                    id="singapore-to-forest-city"
+                    value="marina-to-coworking" 
+                    id="marina-to-coworking"
                     className="sr-only" 
                   />
-                  <Label 
-                    htmlFor="singapore-to-forest-city" 
-                    className="cursor-pointer text-center font-medium"
-                  >
-                    Singapore to Forest City
-                  </Label>
-                </div>
-                <div className={`flex items-center justify-center rounded-md border p-4 cursor-pointer ${direction === 'forest-city-to-singapore' ? 'bg-primary text-primary-foreground' : 'bg-background'}`}>
+                  <span className="text-center font-medium">
+                    From Marina Hotel to NS Co-Working
+                  </span>
+                </Label>
+                
+                <Label
+                  className={`flex items-center justify-center rounded-md border p-4 cursor-pointer ${direction === 'coworking-to-marina' ? 'bg-primary text-primary-foreground' : 'bg-background'}`}
+                  htmlFor="coworking-to-marina"
+                >
                   <RadioGroupItem 
-                    value="forest-city-to-singapore" 
-                    id="forest-city-to-singapore"
+                    value="coworking-to-marina" 
+                    id="coworking-to-marina"
                     className="sr-only" 
                   />
-                  <Label 
-                    htmlFor="forest-city-to-singapore" 
-                    className="cursor-pointer text-center font-medium"
-                  >
-                    Forest City to Singapore
-                  </Label>
-                </div>
+                  <span className="text-center font-medium">
+                    From NS Co-Working to Marina Hotel
+                  </span>
+                </Label>
               </RadioGroup>
             </div>
 
-            {/* Maximum Total Participants */}
+            {/* Leaving Time */}
             <div className="space-y-2">
-              <Label htmlFor="maxParticipants">Maximum Total Participants</Label>
-              <Input 
-                id="maxParticipants" 
-                type="number" 
-                defaultValue="5" 
-                min="1" 
-                max="20"
-                {...register('maxParticipants', { required: true, min: 1, max: 20 })}
-              />
-              {errors.maxParticipants && (
-                <p className="text-sm text-red-500">Please enter a valid number between 1 and 20</p>
-              )}
-            </div>
-
-            {/* Date and Time */}
-            <div className="space-y-2">
-              <Label htmlFor="dateTime">Date and Time</Label>
+              <Label htmlFor="dateTime">Leaving Time</Label>
               <Input 
                 id="dateTime" 
                 type="datetime-local" 
@@ -106,49 +115,78 @@ export default function CreateWalkPage() {
               )}
             </div>
 
-            {/* Locations */}
+            {/* Time Flexibility */}
             <div className="space-y-2">
-              <h3 className="text-lg font-medium">Locations</h3>
+              <Label>Time Flexibility</Label>
+              <RadioGroup 
+                defaultValue="on-time" 
+                value={timeFlexibility} 
+                onValueChange={setTimeFlexibility}
+                className="flex space-x-4"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="on-time" id="on-time" />
+                  <Label htmlFor="on-time" className="cursor-pointer">On-Time</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="flexible" id="flexible" />
+                  <Label htmlFor="flexible" className="cursor-pointer">Flexible</Label>
+                </div>
+              </RadioGroup>
             </div>
 
-            {/* Number of Participants at Your Location */}
+            {/* Meetup Location */}
             <div className="space-y-2">
-              <Label htmlFor="participantsAtLocation">Number of Participants at Your Location</Label>
-              <Input 
-                id="participantsAtLocation" 
-                type="number" 
-                defaultValue="1" 
-                min="1"
-                {...register('participantsAtLocation', { required: true, min: 1 })}
-              />
-              {errors.participantsAtLocation && (
-                <p className="text-sm text-red-500">Please enter a valid number of participants</p>
-              )}
+              <Label htmlFor="meetupSpot">Meetup Location</Label>
+              <Select 
+                value={meetupSpot} 
+                onValueChange={handleMeetupSpotChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a meetup location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {direction === 'marina-to-coworking' ? (
+                    <>
+                      <SelectItem value="ns-cafe">NS Cafe</SelectItem>
+                      <SelectItem value="custom">Setup Custom Meetup Spot</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="ns-coworking-entrance">Near Entrance NS-Co-Working</SelectItem>
+                      <SelectItem value="custom">Setup Custom Meetup Spot</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Your Pickup Location */}
-            <div className="space-y-2">
-              <Label htmlFor="pickupLocation">Your Pickup Location in Singapore</Label>
-              <Input 
-                id="pickupLocation" 
-                placeholder="e.g., Pasir Ris MRT" 
-                {...register('pickupLocation', { required: true })}
-              />
-              {errors.pickupLocation && (
-                <p className="text-sm text-red-500">Please enter your pickup location</p>
-              )}
-            </div>
+            {/* Custom Meetup Spot (conditional) */}
+            {showCustomMeetupInput && (
+              <div className="space-y-2">
+                <Label htmlFor="customMeetupSpot">Custom Meetup Spot</Label>
+                <Input
+                  id="customMeetupSpot"
+                  placeholder="Enter your custom meetup location"
+                  {...register('customMeetupSpot', { 
+                    required: meetupSpot === 'custom' 
+                  })}
+                />
+                {errors.customMeetupSpot && (
+                  <p className="text-sm text-red-500">Please enter your custom meetup location</p>
+                )}
+              </div>
+            )}
 
-            {/* Location Details */}
+            {/* Discussion Topic */}
             <div className="space-y-2">
-              <Label htmlFor="locationDetails">Location Details (Optional)</Label>
+              <Label htmlFor="discussionTopic">Discussion Topic (Optional)</Label>
               <Textarea 
-                id="locationDetails" 
-                placeholder="You can enter multiple lines of text for detailed location instructions"
-                className="min-h-[100px]"
-                {...register('locationDetails')}
+                id="discussionTopic" 
+                placeholder="What would you like to discuss during the walk?"
+                className="min-h-[120px]"
+                {...register('discussionTopic')}
               />
-              <p className="text-sm text-gray-500">You can enter multiple lines of text for detailed location instructions</p>
             </div>
 
             {/* Submit Button */}
