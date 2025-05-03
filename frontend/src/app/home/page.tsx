@@ -44,7 +44,7 @@ export default function Home() {
       meetupSpot: "NS Cafe",
       participants: "1/5 participants",
       direction: "marina-to-coworking",
-      discussionTopic: "Coffee farming sustainability"
+      discussionTopic: "Future of education "
     },
     {
       id: 2,
