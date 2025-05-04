@@ -402,9 +402,9 @@ export default function Home() {
                       </p>
                     </div>
                   </div>
-                  <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
+                  <Link href={`/walks/${walk.id}`} className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-lg">
                     Join
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))
